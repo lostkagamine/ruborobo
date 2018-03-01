@@ -38,13 +38,34 @@ $bot.cmd(:die, [:bot_owner], 'k', [:shut]) do |ev, args|
     exit!
 end
 
-$bot.cmd(:succ, [], 'you know what this does') do |ev, a|
+$bot.cmd(:megasucc, [], 'succer', [:supersucc, :msucc]) do |ev, a|
     r = a.map {|d| d.split('').map(&:succ).join('')}.join(' ')
     if r == '' || r.nil?
         ':warning: Pass arguments to this command.'
     else
         r
     end
+end
+
+$bot.cmd(:succ, [], 'succ') do |ev, a|
+    r = a.map(&:succ).join(' ')
+    if r == '' || r.nil?
+        ':warning: Pass arguments to this command.'
+    else
+        r
+    end
+end
+
+$bot.cmd(:kick, [:kick_members], 'Does a thing', [:remove]) do |ev, args|
+    if args[0].nil?
+        ':warning: Provide a user mention.'
+    end
+    m = ev.bot.parse_mention(args[0])
+    if m.nil?
+        ':warning: Invalid user mention.'
+    end
+    ev.server.kick m.on(ev.server)
+    'Success, user kicked.'
 end
 
 $bot.cmd(:help, [], 'where you are') do |ev, args|
