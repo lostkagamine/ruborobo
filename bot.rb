@@ -39,7 +39,12 @@ $bot.cmd(:die, [:bot_owner], 'k', [:shut]) do |ev, args|
 end
 
 $bot.cmd(:succ, [], 'you know what this does') do |ev, a|
-    a.map {|d| d.split('').map(&:succ).join('')}.join(' ')
+    r = a.map {|d| d.split('').map(&:succ).join('')}.join(' ')
+    if r == '' || r.nil?
+        ':warning: Pass arguments to this command.'
+    else
+        r
+    end
 end
 
 $bot.cmd(:help, [], 'where you are') do |ev, args|
