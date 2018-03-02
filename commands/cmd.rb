@@ -4,6 +4,19 @@ require 'discordrb'
 require_relative './constants.rb'
 
 module Commands
+    class NoPermission
+        attr_reader :perm
+        def initialize(perm)
+            @perm = perm
+        end
+
+        def prettify # OH GOD PLEASE HELP ME
+            @perm.map do |t| # <hackiness>
+                t.to_s.split(/ /).map(&:capitalize).join(' ')
+            end # </hackiness>
+        end
+    end
+
     class Command
         attr_reader :name, :code, :permissions, :description, :invokers
         def initialize(name, code, permissions, description, invokers, bot)
@@ -20,15 +33,25 @@ module Commands
         end
         
         def perm_check(event)
-	        perms = []
+	        perms = {}
             @permissions.each do |p|
                 if p == :bot_owner
-                    perms << @bot.config['owner'].include?(event.author.id)
+                    perms[p] = @bot.config['owner'].include?(event.author.id)
                 else
-                    perms << event.author.permission?(p)
+                    perms[p] = event.author.permission?(p)
                 end
             end
-            return perms.all?
+            if !perms.values.all?
+                noperms = []
+                perms.keys.each do |p|
+                    if !perms[p]
+                        noperms << p
+                    end
+                end
+                Commands::NoPermission(noperms)
+            else
+                true
+            end
         end
     end
 
@@ -54,8 +77,9 @@ module Commands
                     if acmd.nil?
                         self.idispatch(:command_notfound, ev, cmd)
                     else
-                        if !acmd.perm_check(ev)
-                            self.idispatch(:command_noperms, ev, acmd)
+                        pc = acmd.perm_check(ev)
+                        if pc.is_a?(Commands::NoPermission)
+                            self.idispatch(:command_noperms, ev, acmd, pc)
                             next
                         end
                         begin
@@ -97,9 +121,9 @@ module Commands
             end
         end
 
-        def cmd(sym, permissions, description=nil, invokers=[], &block)
+        def cmd(sym, perms:[], desc:nil, invokers:[], &block)
             invokers << sym
-            @commands << Commands::Command.new(sym, block, permissions, description, invokers, self)
+            @commands << Commands::Command.new(sym, block, perms, desc, invokers, self)
         end
 
         def parse_prefix(m)

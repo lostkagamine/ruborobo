@@ -18,7 +18,7 @@ end
 
 $bot.event(:command_notfound) {|ev, cmd|}
 
-$bot.event(:command_noperms) do |ev, cmd|
+$bot.event(:command_noperms) do |ev, cmd, pc|
     things = [
         'No. (Invalid permissions.)',
         'You do not have permission to use this command.',
@@ -28,17 +28,17 @@ $bot.event(:command_noperms) do |ev, cmd|
     ev.respond things.sample
 end
 
-$bot.cmd(:ok, [], 'why') do |ev, args|
+$bot.cmd(:ok, desc:'why') do |ev, args|
     ha = ['\*angry bot noises\*', 'henlo', 'why', 'y', 'no u', 'ok']
     ha.sample
 end
 
-$bot.cmd(:die, [:bot_owner], 'k', [:shut]) do |ev, args|
+$bot.cmd(:die, perms:[:bot_owner], desc:'k', invokers:[:shut]) do |ev, args|
     ev.respond ['ok bye', 'good hecking bye', 'rip', '\*Drain gurgling\*', '\*groaning\*', '*dies*'].sample
     exit!
 end
 
-$bot.cmd(:megasucc, [], 'succer', [:supersucc, :msucc]) do |ev, a|
+$bot.cmd(:megasucc, desc:'succer', invokers:[:supersucc, :msucc]) do |ev, a|
     r = a.map {|d| d.split('').map(&:succ).join('')}.join(' ')
     if r == '' || r.nil?
         ':warning: Pass arguments to this command.'
@@ -47,7 +47,7 @@ $bot.cmd(:megasucc, [], 'succer', [:supersucc, :msucc]) do |ev, a|
     end
 end
 
-$bot.cmd(:succ, [], 'succ') do |ev, a|
+$bot.cmd(:succ, desc:'succ') do |ev, a|
     r = a.map(&:succ).join(' ')
     if r == '' || r.nil?
         ':warning: Pass arguments to this command.'
@@ -56,7 +56,7 @@ $bot.cmd(:succ, [], 'succ') do |ev, a|
     end
 end
 
-$bot.cmd(:kick, [:kick_members], 'Does a thing', [:remove]) do |ev, args|
+$bot.cmd(:kick, perms:[:kick_members], desc:'Does a thing', invokers:[:remove]) do |ev, args|
     if args[0].nil?
         ':warning: Provide a user mention.'
     end
@@ -68,8 +68,12 @@ $bot.cmd(:kick, [:kick_members], 'Does a thing', [:remove]) do |ev, args|
     'Success, user kicked.'
 end
 
-$bot.cmd(:help, [], 'where you are') do |ev, args|
-    s = ''
+$bot.cmd(:setgame, desc:'it sets the game', invokers:[:sg]) do |ev, args|
+    ev.bot.game = args.join(' ')
+end
+
+$bot.cmd(:help, desc:'where you are') do |ev, args|
+    s = '```'
     $bot.commands.each do |v|
         next unless v.perm_check(ev)
         hasinv = v.invokers != [v.name]
@@ -80,18 +84,19 @@ $bot.cmd(:help, [], 'where you are') do |ev, args|
         end
         s << "#{v.name} - #{v.description.nil? ? '*No description given.*' : v.description}#{currinv}\n"
     end
+    s << '```'
     s
 end
 
-$bot.cmd(:error, [:bot_owner], 'crashe') do |ev, args|
+$bot.cmd(:error, perms:[:bot_owner], desc:'crashe') do |ev, args|
     3/0
 end
 
-$bot.cmd(:eval, [:bot_owner], 'lol') do |ev, args|
+$bot.cmd(:eval, perms:[:bot_owner], desc:'lol') do |ev, args|
     begin
         res = eval args.join(' ')
         res = res.inspect
-	res = res.gsub(ev.bot.config['token'], '<no>')
+	    res = res.gsub(ev.bot.config['token'], '<no>')
         if res.length > 1984
             hbresp = RestClient.post('https://hastebin.com/documents', res)
             thing = eval hbresp.body
