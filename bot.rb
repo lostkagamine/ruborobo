@@ -90,7 +90,8 @@ end
 $bot.cmd(:eval, [:bot_owner], 'lol') do |ev, args|
     begin
         res = eval args.join(' ')
-        res = res.to_s
+        res = res.inspect
+	res = res.gsub(ev.bot.config['token'], '<no>')
         if res.length > 1984
             hbresp = RestClient.post('https://hastebin.com/documents', res)
             thing = eval hbresp.body
