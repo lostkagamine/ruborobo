@@ -12,7 +12,7 @@ module Commands
 
         def prettify # OH GOD PLEASE HELP ME
             @perm.map do |t| # <hackiness>
-                t.to_s.split(/ /).map(&:capitalize).join(' ')
+                t.to_s.split(/_/).map(&:capitalize).join(' ')
             end # </hackiness>
         end
     end
@@ -48,7 +48,7 @@ module Commands
                         noperms << p
                     end
                 end
-                Commands::NoPermission(noperms)
+                Commands::NoPermission.new(noperms)
             else
                 true
             end

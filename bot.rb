@@ -18,14 +18,8 @@ end
 
 $bot.event(:command_notfound) {|ev, cmd|}
 
-$bot.event(:command_noperms) do |ev, cmd, pc|
-    things = [
-        'No. (Invalid permissions.)',
-        'You do not have permission to use this command.',
-        'Nope... Not enough permissions.',
-        'Heck off. (Invalid permissions.)'
-    ]
-    ev.respond things.sample
+$bot.event(:command_noperms) do |ev, cmd, perm|
+    ev.respond "You do not have permission to perform this command. You need: `#{perm.prettify.join(', ')}`"
 end
 
 $bot.cmd(:ok, desc:'why') do |ev, args|
@@ -70,6 +64,7 @@ end
 
 $bot.cmd(:setgame, desc:'it sets the game', invokers:[:sg]) do |ev, args|
     ev.bot.game = args.join(' ')
+    'k'
 end
 
 $bot.cmd(:help, desc:'where you are') do |ev, args|
@@ -92,7 +87,7 @@ $bot.cmd(:error, perms:[:bot_owner], desc:'crashe') do |ev, args|
     3/0
 end
 
-$bot.cmd(:eval, perms:[:bot_owner], desc:'lol') do |ev, args|
+$bot.cmd(:eval, perms:[:bot_owner], desc:'lol', invokers:[:ev, :e]) do |ev, args|
     begin
         res = eval args.join(' ')
         res = res.inspect
