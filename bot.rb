@@ -7,32 +7,32 @@ require 'rest_client'
 Dir["commands/*.rb"].each { |r|
     require_relative r
 }
-$config = JSON.parse(File.read('./config.json'))
-$bot = Commands::Bot.new(config:$config, token:$config['token'])
+config = JSON.parse(File.read('./config.json'))
+bot = Commands::Bot.new(config:config, token:config['token'])
 
-puts "Project eRB v#{$config['version']}"
+puts "Project eRB v#{config['version']}"
 
-$bot.event(:command_error) do |ev, cmd, exception|
+bot.event(:command_error) do |ev, cmd, exception|
     ev.respond "#{['Apparently Ry or Erisa can\'t code.', 'Oof, ow, ouchie.', 'Whee, bugs.', 'Woah, a Ruby bug! Let\'s pester Erisa about it!', 'Oops, I died again. Thanks Ry.'].sample}\n```\n#{exception}```\n(Error in command #{cmd.name})"
 end
 
-$bot.event(:command_notfound) {|ev, cmd|}
+bot.event(:command_notfound) {|ev, cmd|}
 
-$bot.event(:command_noperms) do |ev, cmd, perm|
+bot.event(:command_noperms) do |ev, cmd, perm|
     ev.respond "You do not have permission to perform this command. You need: `#{perm.prettify.join(', ')}`"
 end
 
-$bot.cmd(:ok, desc:'why') do |ev, args|
+bot.cmd(:ok, desc:'why') do |ev, args|
     ha = ['\*angry bot noises\*', 'henlo', 'why', 'y', 'no u', 'ok']
     ha.sample
 end
 
-$bot.cmd(:die, perms:[:bot_owner], desc:'k', invokers:[:shut]) do |ev, args|
+bot.cmd(:die, perms:[:bot_owner], desc:'k', invokers:[:shut]) do |ev, args|
     ev.respond ['ok bye', 'good hecking bye', 'rip', '\*Drain gurgling\*', '\*groaning\*', '*dies*'].sample
     exit!
 end
 
-$bot.cmd(:megasucc, desc:'succer', invokers:[:supersucc, :msucc]) do |ev, a|
+bot.cmd(:megasucc, desc:'succer', invokers:[:supersucc, :msucc]) do |ev, a|
     r = a.map {|d| d.split('').map(&:succ).join('')}.join(' ')
     if r == '' || r.nil?
         ':warning: Pass arguments to this command.'
@@ -41,7 +41,7 @@ $bot.cmd(:megasucc, desc:'succer', invokers:[:supersucc, :msucc]) do |ev, a|
     end
 end
 
-$bot.cmd(:succ, desc:'succ') do |ev, a|
+bot.cmd(:succ, desc:'succ') do |ev, a|
     r = a.map(&:succ).join(' ')
     if r == '' || r.nil?
         ':warning: Pass arguments to this command.'
@@ -50,7 +50,12 @@ $bot.cmd(:succ, desc:'succ') do |ev, a|
     end
 end
 
-$bot.cmd(:kick, perms:[:kick_members], desc:'Does a thing', invokers:[:remove]) do |ev, args|
+bot.cmd(:openryswhisker, perms:[:bot_owner], desc:'open ry\'s whisker menu', invokers:[:orwm]) do |ev, args|
+    a = `xfce4-popup-whiskermenu`
+    'ok done'
+end
+
+bot.cmd(:kick, perms:[:kick_members], desc:'Does a thing', invokers:[:remove]) do |ev, args|
     if args[0].nil?
         ':warning: Provide a user mention.'
     end
@@ -62,14 +67,14 @@ $bot.cmd(:kick, perms:[:kick_members], desc:'Does a thing', invokers:[:remove]) 
     'Success, user kicked.'
 end
 
-$bot.cmd(:setgame, desc:'it sets the game', invokers:[:sg]) do |ev, args|
+bot.cmd(:setgame, desc:'it sets the game', invokers:[:sg]) do |ev, args|
     ev.bot.game = args.join(' ')
     'k'
 end
 
-$bot.cmd(:help, desc:'where you are') do |ev, args|
+bot.cmd(:help, desc:'where you are') do |ev, args|
     s = '```'
-    $bot.commands.each do |v|
+    bot.commands.each do |v|
         next unless v.perm_check(ev)
         hasinv = v.invokers != [v.name]
         if hasinv
@@ -83,11 +88,11 @@ $bot.cmd(:help, desc:'where you are') do |ev, args|
     s
 end
 
-$bot.cmd(:error, perms:[:bot_owner], desc:'crashe') do |ev, args|
+bot.cmd(:error, perms:[:bot_owner], desc:'crashe') do |ev, args|
     3/0
 end
 
-$bot.cmd(:eval, perms:[:bot_owner], desc:'lol', invokers:[:ev, :e]) do |ev, args|
+bot.cmd(:eval, perms:[:bot_owner], desc:'lol', invokers:[:ev, :e]) do |ev, args|
     begin
         res = eval args.join(' ')
         res = res.inspect
@@ -104,11 +109,11 @@ $bot.cmd(:eval, perms:[:bot_owner], desc:'lol', invokers:[:ev, :e]) do |ev, args
     end
 end
 
-$bot.ready do |ev|
-    aa = $bot.prefixes
+bot.ready do |ev|
+    aa = bot.prefixes
     puts "Bot ready, logged in as #{ev.bot.profile.distinct} (#{ev.bot.profile.id})"
     puts "Prefixes: #{aa}"
 end
 
-$bot.run
+bot.run
 
