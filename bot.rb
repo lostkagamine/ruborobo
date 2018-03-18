@@ -12,13 +12,13 @@ bot = Commands::Bot.new(config:config, token:config['token'])
 
 puts "Project eRB v#{config['version']}"
 
-bot.event(:command_error) do |ev, cmd, exception|
+bot.evt(:command_error) do |ev, cmd, exception|
     ev.respond "#{['Apparently Ry or Erisa can\'t code.', 'Oof, ow, ouchie.', 'Whee, bugs.', 'Woah, a Ruby bug! Let\'s pester Erisa about it!', 'Oops, I died again. Thanks Ry.'].sample}\n```\n#{exception}```\n(Error in command #{cmd.name})"
 end
 
-bot.event(:command_notfound) {|ev, cmd|}
+bot.evt(:command_notfound) {|ev, cmd| }#ev.respond('heck off')}
 
-bot.event(:command_noperms) do |ev, cmd, perm|
+bot.evt(:command_noperms) do |ev, cmd, perm|
     ev.respond "You do not have permission to perform this command. You need: `#{perm.prettify.join(', ')}`"
 end
 
@@ -95,7 +95,7 @@ end
 bot.cmd(:eval, perms:[:bot_owner], desc:'lol', invokers:[:ev, :e]) do |ev, args|
     begin
         res = eval args.join(' ')
-        res = res.inspect
+        res = res.to_s
 	    res = res.gsub(ev.bot.config['token'], '<no>')
         if res.length > 1984
             hbresp = RestClient.post('https://hastebin.com/documents', res)
@@ -110,7 +110,7 @@ bot.cmd(:eval, perms:[:bot_owner], desc:'lol', invokers:[:ev, :e]) do |ev, args|
 end
 
 bot.ready do |ev|
-    aa = bot.prefixes
+    aa = bot.invokers.map {|x| x.value}
     puts "Bot ready, logged in as #{ev.bot.profile.distinct} (#{ev.bot.profile.id})"
     puts "Prefixes: #{aa}"
 end
