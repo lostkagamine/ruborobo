@@ -40,6 +40,8 @@ module Commands
                 return text[@value.length..text.length]
             when :suffix
                 return text[0..-@value.length-1]
+            when :dual
+                return text[@value[0].length..-@value[1].length-1]
             when :regex
                 return self.match(text)
             end
@@ -51,6 +53,8 @@ module Commands
                 return text.start_with? @value
             when :suffix
                 return text.end_with? @value
+            when :dual
+                return text.start_with?(@value[0]) && text.end_with?(@value[1])
             when :regex
                 return !self.match(text).nil?
             end
@@ -132,6 +136,8 @@ module Commands
                             ev.respond(a)
                         rescue Exception => err
                             self.idispatch(:command_error, ev, acmd, err)
+                    else
+                        self.idispatch(:command_notfound, ev, acmd)
                     end
                 end
             end
