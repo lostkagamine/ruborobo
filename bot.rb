@@ -33,7 +33,7 @@ bot.cmd(:die, perms:[:bot_owner], desc:'k', invokers:[:shut]) do |ev, args|
 end
 
 bot.cmd(:megasucc, desc:'succer', invokers:[:supersucc, :msucc]) do |ev, a|
-    r = a.map {|d| d.split('').map(&:succ).join('')}.join(' ')
+    r = a.raw.map {|d| d.split('').map(&:succ).join('')}.join(' ')
     if r == '' || r.nil?
         ':warning: Pass arguments to this command.'
     else
@@ -42,7 +42,7 @@ bot.cmd(:megasucc, desc:'succer', invokers:[:supersucc, :msucc]) do |ev, a|
 end
 
 bot.cmd(:succ, desc:'succ') do |ev, a|
-    r = a.map(&:succ).join(' ')
+    r = a.raw.map(&:succ).join(' ')
     if r == '' || r.nil?
         ':warning: Pass arguments to this command.'
     else
@@ -56,10 +56,10 @@ bot.cmd(:openryswhisker, perms:[:bot_owner], desc:'open ry\'s whisker menu', inv
 end
 
 bot.cmd(:kick, perms:[:kick_members], desc:'Does a thing', invokers:[:remove]) do |ev, args|
-    if args[0].nil?
+    if args.raw[0].nil?
         ':warning: Provide a user mention.'
     end
-    m = ev.bot.parse_mention(args[0])
+    m = ev.bot.parse_mention(args.raw[0])
     if m.nil?
         ':warning: Invalid user mention.'
     end
@@ -68,7 +68,7 @@ bot.cmd(:kick, perms:[:kick_members], desc:'Does a thing', invokers:[:remove]) d
 end
 
 bot.cmd(:setgame, desc:'it sets the game', invokers:[:sg]) do |ev, args|
-    ev.bot.game = args.join(' ')
+    ev.bot.game = args.raw.join(' ')
     'k'
 end
 
@@ -94,7 +94,7 @@ end
 
 bot.cmd(:eval, perms:[:bot_owner], desc:'lol', invokers:[:ev, :e]) do |ev, args|
     begin
-        res = eval args.join(' ')
+        res = eval args.raw.join(' ')
         res = res.to_s
 	    res = res.gsub(ev.bot.config['token'], '<no>')
         if res.length > 1984
@@ -107,6 +107,10 @@ bot.cmd(:eval, perms:[:bot_owner], desc:'lol', invokers:[:ev, :e]) do |ev, args|
     rescue Exception => e
         "```\n#{e}```"
     end
+end
+
+bot.cmd(:echo, perms:[:bot_owner], desc:'it says what you say', invokers:[:say]) do |ev, args|
+    args.raw.join(' ')
 end
 
 bot.ready do |ev|

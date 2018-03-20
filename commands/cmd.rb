@@ -2,8 +2,12 @@
 
 require 'discordrb'
 require_relative './constants.rb'
+require_relative './util.rb'
 
 module Commands
+    include Constants
+    include Utils
+
     class NoPermission
         attr_reader :perm
         def initialize(perm)
@@ -19,9 +23,12 @@ module Commands
 
     class Invoker
         attr_reader :value, :type
-        def initialize(val, type)
+        def initialize(val, type, **kwargs)
             if type == :regex
                 val = Regexp::new(val)
+            end
+            if !kwargs[:sep].nil? && type == :dual
+                val = val.split(kwargs[:sep])
             end
             @value = val
             @type = type
@@ -58,6 +65,17 @@ module Commands
             when :regex
                 return !self.match(text).nil?
             end
+        end
+    end
+
+    class Arguments
+        attr_reader :raw
+        def initialize(raw)
+            @raw = raw
+        end
+        
+        def switches
+            Commands::Utils::consume_switch(@raw.join(' '))
         end
     end
 
@@ -99,7 +117,6 @@ module Commands
         end
     end
 
-    include Constants
     class Bot < Discordrb::Bot
 	    attr_accessor :invokers
         attr_reader :config, :commands, :listeners # what the hell ruby
@@ -132,7 +149,7 @@ module Commands
                             next
                         end
                         begin
-                            a = acmd.invoke(ev, sm)
+                            a = acmd.invoke(ev, Commands::Arguments.new(sm))
                             ev.respond(a)
                         rescue Exception => err
                             self.idispatch(:command_error, ev, acmd, err)
@@ -176,8 +193,8 @@ module Commands
             @commands << Commands::Command.new(sym, block, perms, desc, invokers, self)
         end
 
-        def invoke_by(thing, type)
-            @invokers << Commands::Invoker.new(thing, type)
+        def invoke_by(thing, type, **kwargs)
+            @invokers << Commands::Invoker.new(thing, type, kwargs)
         end
 
         def get_invoker(text)
