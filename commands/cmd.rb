@@ -77,6 +77,10 @@ module Commands
         def switches
             Commands::Utils::consume_switch(@raw.join(' '))
         end
+
+        def noswitch
+            Commands::Utils::remove_switch(@raw.join(' '))
+        end
     end
 
     class Command
@@ -134,9 +138,9 @@ module Commands
                     end
                     awau = meme.extrapolate(ev.text)
                     if awau.is_a?(MatchData)
-                        awau = awau[1].split(' ')
+                        awau = awau[1].split(/ /)
                     else
-                        awau = awau.split(' ')
+                        awau = awau.split(/ /)
                     end
                     cmd = awau.first
                     acmd = self.get_command cmd.to_sym

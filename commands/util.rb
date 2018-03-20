@@ -1,15 +1,8 @@
-# Switch parser for Commandorobo
+# Utility module for commandorobo
 # Written by ry00001
 
 module Commands
     module Utils
-        class SwitchResult
-            def initialize(s, ns)
-                @switch = s
-                @noswitch = ns
-            end
-        end
-
         def self.nodash(i)
             i.split('').reject {|j| j == '-'}.join('')
         end
@@ -36,11 +29,44 @@ module Commands
                             k.chars.each do |l|
                                 switches[l.to_sym] = true
                             end
+                            switches
                         end
                     end
                 end
             end
             return switches
+        end
+
+        def self.fish_xdm_login_hack_hack_hack_hack # I don't know why this is here but it is, enjoy
+            'perry was here'
+        end
+
+        def self.remove_switch(str)
+            parsed = []
+            skip = false
+            str.split(' ').each do |i|
+                if skip
+                    skip = false
+                    next
+                end
+                if i.start_with?('-') && i.length > 1
+                    if i[1] == '-'
+                        skip = true
+                        next
+                    else
+                        i = self.nodash(i)
+                        if i.length == 1
+                            skip = true
+                            next
+                        else
+                            next
+                        end
+                    end
+                else
+                    parsed << i
+                end
+            end
+            parsed
         end
     end
 end

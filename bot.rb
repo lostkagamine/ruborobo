@@ -33,11 +33,19 @@ bot.cmd(:die, perms:[:bot_owner], desc:'k', invokers:[:shut]) do |ev, args|
 end
 
 bot.cmd(:megasucc, desc:'succer', invokers:[:supersucc, :msucc]) do |ev, a|
-    r = a.raw.map {|d| d.split('').map(&:succ).join('')}.join(' ')
+    switcc = a.switches[:t] || a.switches[:times]
+    if switcc == true
+        switcc = 1
+    end
+    switcc = (switcc.to_i) || 1
+    r = a.noswitch
+    for m in 0..switcc do
+        r = r.map {|d| d.split('').map(&:succ).join('')}
+    end
     if r == '' || r.nil?
         ':warning: Pass arguments to this command.'
     else
-        r
+        r.join(' ')
     end
 end
 
@@ -111,6 +119,19 @@ end
 
 bot.cmd(:echo, perms:[:bot_owner], desc:'it says what you say', invokers:[:say]) do |ev, args|
     args.raw.join(' ')
+end
+
+bot.cmd(:switchtest, desc:'it\'s a switch test', invokers:[:st]) do |ev, args|
+    "```\nSwitches: #{args.switches}\nSwitch-less: #{args.noswitch}\n```"
+end
+
+bot.cmd(:scream, desc:'AAAAAAAAAAAAAAA', invokers:[:screm]) do |ev, args|
+    switcc = args.switches[:t]
+    if switcc == true
+        switcc = 1
+    end
+    switcc = (switcc.to_i) || 0
+    args.noswitch.join(' ').upcase + '!' * switcc
 end
 
 bot.ready do |ev|
