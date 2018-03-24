@@ -19,17 +19,17 @@ module Commands
                     if k[1] == '-'
                         # oh heck another switch
                         k = self.nodash(k)
-                        switches[k.to_sym] = ws[i+1].nil? ? true : ws[i+1]
+                        switches[k.to_sym] = ws[i+1].nil? && !ws[i+1].start_with?('-') ? true : ws[i+1]
                     else
                         # no double-switch: interpret literally
                         k = self.nodash(k)
                         if k.length == 1
-                            switches[k.to_sym] = ws[i+1].nil? ? true : ws[i+1]
+                            switches[k.to_sym] = ws[i+1].nil? && !ws[i+1].start_with?('-') ? true : ws[i+1]
                         else
                             k.chars.each do |l|
                                 switches[l.to_sym] = true
                             end
-                            switches
+                            switches[switches.keys.last] = ws[i+1].nil? && !ws[i+1].start_with?('-') ? true : ws[i+1]
                         end
                     end
                 end
@@ -50,18 +50,7 @@ module Commands
                     next
                 end
                 if i.start_with?('-') && i.length > 1
-                    if i[1] == '-'
-                        skip = true
-                        next
-                    else
-                        i = self.nodash(i)
-                        if i.length == 1
-                            skip = true
-                            next
-                        else
-                            next
-                        end
-                    end
+                    skip = true
                 else
                     parsed << i
                 end
