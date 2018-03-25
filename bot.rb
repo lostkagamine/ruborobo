@@ -1,14 +1,13 @@
-# Erio in Ruby
-# by ry00001
+# ruborobo - a ruby testing bot
+# (C) 2018 Team ruborobo (ry00001, Erisa Arrowsmith (Seriel))
 
 require 'discordrb' # meme
 require 'json'
+require 'commandorobo'
 require 'rest_client'
-Dir["commands/*.rb"].each { |r|
-    require_relative r
-}
+
 config = JSON.parse(File.read('./config.json'))
-bot = Commands::Bot.new(config:config, token:config['token'])
+bot = Commandorobo::Bot.new(config, config['token'])
 
 puts "Project eRB v#{config['version']}"
 
