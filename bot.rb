@@ -16,7 +16,8 @@ module Ruborobo
         puts 'Warning! JSON configuration files are deprecated and will be eventually removed! Migrate to YML as soon as possible!'
         config = JSON.parse(File.read('./config.json'))
     else
-        puts 'No config found - exiting...\nRefer to CONFIGURING.md for info.'
+        puts "No config found - exiting...\nRefer to CONFIGURING.md for info."
+        exit
     end
 
     $bot = Commandorobo::Bot.new(config, config['token'])
