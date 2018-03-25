@@ -1,0 +1,13 @@
+---
+version: 0.1
+token: Token
+owner:
+- 228574821590499329
+- 190544080164487168
+# Change this! Any user in the above list will be able to use admin commands like eval!
+invokers:
+- - suffix
+  - " thanks"
+- - prefix
+  - rb!
+# Change these, if you want custom prefixes!

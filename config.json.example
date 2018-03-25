@@ -1,0 +1,6 @@
+{
+    "version": "0.1",
+    "token": "Token here!",
+    "owner": [228574821590499329, 190544080164487168],
+    "invokers": [["suffix", " thanks"], ["prefix", "rb!"]]
+}
