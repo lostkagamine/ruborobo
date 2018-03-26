@@ -31,7 +31,7 @@ module Ruborobo
             if r.length > 1984
                 hbresp = RestClient.post('https://hastebin.com/documents', r)
                 thing = eval hbresp.body
-                ":warning: Output too long! (#{res.length} > 1984 characters) See the full output here: https://hastebin.com/raw/#{thing[:key]}"
+                ":warning: Output too long! (#{r.length} > 1984 characters) See the full output here: https://hastebin.com/raw/#{thing[:key]}"
             else
                 "```#{r}```"
             end
