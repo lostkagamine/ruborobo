@@ -1,5 +1,5 @@
 #!/bin/sh
 # Docker start script for ruborobo
 
-ruby /usr/src/ruborobo/docker-setup.rb
+echo "now starting"
 ruby /usr/src/ruborobo/bot.rb
