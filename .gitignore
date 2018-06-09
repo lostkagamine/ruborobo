@@ -88,3 +88,4 @@ $RECYCLE.BIN/
 # begin custom
 config.json
 config.yml
+!.circleci/config.yml
