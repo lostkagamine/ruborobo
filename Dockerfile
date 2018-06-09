@@ -9,4 +9,4 @@ COPY . /usr/src/ruborobo
 WORKDIR /usr/src/ruborobo
 RUN bundle install
 RUN apk del alpine-sdk
-ENTRYPOINT ["/usr/bin/ruborobo/entrypoint.sh"]
+ENTRYPOINT ["/usr/src/ruborobo/entrypoint.sh"]
