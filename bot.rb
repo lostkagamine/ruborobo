@@ -25,8 +25,8 @@ module Ruborobo
     else
         config = {
             'token' => ENV['TOKEN'],
-            'invokers' => ENV['INVOKERS'],
-            'owner' => ENV['OWNER'],
+            'invokers' => ENV['INVOKERS'].split('/').split(' '),
+            'owner' => ENV['OWNER'].split(' '),
             'version' => 'Docker'
         }
     end
