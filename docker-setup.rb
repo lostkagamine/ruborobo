@@ -9,13 +9,6 @@ if !ENV['DOCKER']
     exit 1
 end
 
-config = {
-    'token' => ENV['TOKEN'],
-    'invokers' => ENV['INVOKERS'].split('/').map {|a| a.split(' ')},
-    'owner' => ENV['OWNER'].split(' ').map {|a| a.to_i},
-    'version' => 'Docker'
-}
-
 puts 'writing config'
 File.open('/usr/src/ruborobo/config.yml', 'w') do |f|
     f.write config.to_yaml
