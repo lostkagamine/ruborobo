@@ -8,4 +8,5 @@ RUN apk update && \
 COPY . /usr/src/ruborobo
 WORKDIR /usr/src/ruborobo
 RUN bundle install
+RUN apk del alpine-sdk
 CMD ["ruby", "/usr/src/ruborobo/bot.rb"]
