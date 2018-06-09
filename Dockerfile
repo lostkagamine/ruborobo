@@ -1,6 +1,7 @@
 # ruborobo dockerimage
 # i think made by ry00001
 FROM ruby:alpine
+ENV DOCKER true
 RUN apk update && \
     apk upgrade && \
     apk add alpine-sdk
