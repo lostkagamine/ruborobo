@@ -1,5 +1,5 @@
 module Ruborobo
-    $bot.cmd(:kick, perms:[:kick_members], desc:'Does a thing', invokers:[:remove]) do |ev, args|
+    $bot.cmd(:kick, perms:[:kick_members], desc:'Does a thing', invokers:[:remove, :eject]) do |ev, args|
         if args.raw[0].nil?
             ':warning: Provide a user mention.'
         end

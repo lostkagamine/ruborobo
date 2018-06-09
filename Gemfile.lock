@@ -1,7 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    commandorobo (0.0.3)
+    commandorobo (0.0.5)
       discordrb (~> 3.1, >= 3.1.0)
     discordrb (3.2.1)
       discordrb-webhooks (~> 3.2.0.1)
@@ -54,4 +54,4 @@ DEPENDENCIES
   rest-client
 
 BUNDLED WITH
-   1.16.1
+   1.16.2
