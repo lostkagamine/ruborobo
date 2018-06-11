@@ -1,13 +1,12 @@
 module Ruborobo
     $bot.cmd(:kick, perms:[:kick_members], desc:'Does a thing', invokers:[:remove, :eject]) do |ev, args|
-        if args.raw[0].nil?
-            ':warning: Provide a user mention.'
-        end
         m = ev.bot.parse_mention(args.raw[0])
-        if m.nil?
-            ':warning: Invalid user mention.'
+        begin
+            on = m.on ev.server
+        rescue
+            'Bad user mention.'
         end
-        ev.server.kick m.on(ev.server)
+        ev.server.kick on
         'Success, user kicked.'
     end
 end
