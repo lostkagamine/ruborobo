@@ -89,3 +89,4 @@ $RECYCLE.BIN/
 config.json
 config.yml
 !.circleci/config.yml
+Gemfile.lock
