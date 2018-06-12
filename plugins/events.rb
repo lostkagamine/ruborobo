@@ -8,6 +8,6 @@ module Ruborobo
     $bot.evt(:command_notfound) {|ev, cmd|}
 
     $bot.evt(:command_noperms) do |ev, cmd, perm|
-        ev.respond "You do not have permission to perform this command. You need: `#{perm.prettify.join(', ')}`"
+        ev.respond "You do not have permission to perform this command. You need: `#{perm.prettify.map do |a| a.join(' ') end.join(', ')}`"
     end
 end
