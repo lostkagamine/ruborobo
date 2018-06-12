@@ -8,6 +8,7 @@ RUN apk update && \
 COPY . /usr/src/ruborobo
 WORKDIR /usr/src/ruborobo
 RUN bundle install
+RUN gem update
 RUN apk del alpine-sdk
 # why didn't entrypoint have exec perms
 # i blame windows
