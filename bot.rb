@@ -30,7 +30,7 @@ module Ruborobo
             'invokers' => ENV['INVOKERS'].split('/').map {|a| a.split(' ')},
             'version' => '-Docker'
         }
-        owners = ENV['OWNER'].split(',').map(&:to_i),
+        owners = ENV['OWNER'].split(',').map(&:to_i)
     end
 
     $bot = Commandorobo::Bot.new(config, config['token'], owners=owners)
