@@ -33,7 +33,7 @@ module Ruborobo
         owners = ENV['OWNER'].split(',').map(&:to_i)
     end
 
-    $bot = Commandorobo::Bot.new(config, config['token'], owners: owners) # oh it's colon not equal lol go me
+    $bot = Commandorobo::Bot.new(config, config['token'], {owners: owners}) # oh it's colon not equal lol go me
 
     puts "Project eRB v#{config['version']}"
 
