@@ -46,6 +46,7 @@ module Ruborobo
         aa = $bot.invokers.map {|x| x.value}
         puts "Bot ready, logged in as #{ev.bot.profile.distinct} (#{ev.bot.profile.id})"
         puts "Prefixes: #{aa}"
+        puts "Owners: #{$bot.owners}"
     end
 
     $bot.run
