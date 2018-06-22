@@ -9,6 +9,7 @@ module Ruborobo
     require 'rest_client'
 
     config = {} # because scoping:tm:
+    owners = nil
 
     if !ENV['DOCKER']
         is_yml = File.file? './config.yml'
@@ -27,12 +28,12 @@ module Ruborobo
         config = {
             'token' => ENV['TOKEN'],
             'invokers' => ENV['INVOKERS'].split('/').map {|a| a.split(' ')},
-	    'owner' => ENV['OWNER'].split(',').map(&:to_i),
             'version' => '-Docker'
         }
+        owners = ENV['OWNER'].split(',').map(&:to_i),
     end
 
-    $bot = Commandorobo::Bot.new(config, config['token'])
+    $bot = Commandorobo::Bot.new(config, config['token'], owners=owners)
 
     puts "Project eRB v#{config['version']}"
 
