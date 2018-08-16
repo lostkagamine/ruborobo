@@ -28,12 +28,12 @@ module Ruborobo
         config = {
             'token' => ENV['TOKEN'],
             'invokers' => ENV['INVOKERS'].split('/').map {|a| a.split(' ')},
-            'version' => '-Docker'
+            'version' => 'Docker'
         }
         owners = ENV['OWNER'].split(',').map(&:to_i)
     end
 
-    $bot = Commandorobo::Bot.new(config, config['token'], {owners: owners})
+    $bot = Commandorobo::Bot.new(config, config['token'])
 
     puts "Project eRB v#{config['version']}"
 
